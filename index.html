@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Padel Bay – Court Booking</title>
+  <style>
+    /* ── Brand Tokens ── */
+    :root {
+      --primary:   #94ceae;
+      --dark:      #24646e;
+      --light-mint:#d4e8e2;
+      --sage:      #b5c5c0;
+      --bg:        #f2f8f6;
+      --card:      #ffffff;
+      --text:      #1a2e2b;
+      --text-muted:#5a7a76;
+      --border:    #ddeee8;
+      --danger:    #e05252;
+      --success:   #3cae7c;
+      --shadow:    0 2px 16px rgba(36,100,110,.10);
+      --radius:    14px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── App Shell ── */
+    #app {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      position: relative;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--dark);
+      color: #fff;
+      padding: 18px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header .logo {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header .logo span { color: var(--primary); }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .header-actions { display: flex; gap: 10px; }
+    .btn-icon {
+      background: rgba(255,255,255,.12);
+      border: none; border-radius: 8px;
+      color: #fff; cursor: pointer;
+      padding: 6px 12px; font-size: 13px;
+      font-weight: 600; transition: background .2s;
+    }
+    .btn-icon:hover { background: rgba(255,255,255,.22); }
+
+    /* ── Content Area ── */
+    .content { flex: 1; padding: 20px 16px 100px; }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 10px 0 20px;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      cursor: pointer; padding: 4px 0;
+      color: var(--text-muted); font-size: 11px; font-weight: 600;
+      transition: color .2s;
+      border: none; background: none;
+    }
+    .nav-item.active { color: var(--dark); }
+    .nav-item .nav-icon { font-size: 22px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .card-sm { padding: 14px 16px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: block; width: 100%;
+      padding: 15px; border: none; border-radius: 12px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      transition: opacity .18s, transform .12s;
+      text-align: center; letter-spacing: .2px;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--dark); color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-secondary { background: var(--light-mint); color: var(--dark); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm {
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 700; width: auto;
+      display: inline-block;
+    }
+
+    /* ── Inputs ── */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 13px 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 15px; color: var(--text); background: var(--bg);
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    .field input:focus, .field select:focus {
+      outline: none; border-color: var(--primary);
+      background: #fff;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #1a4f58 100%);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      color: #fff;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '🎾';
+      position: absolute; right: 20px; top: 20px;
+      font-size: 64px; opacity: .15;
+    }
+    .hero h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .hero p { font-size: 14px; opacity: .8; margin-bottom: 20px; }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-size: 16px; font-weight: 800;
+      color: var(--text); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── Court Cards ── */
+    .courts-grid { display: flex; flex-direction: column; gap: 12px; }
+    .court-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .2s, transform .15s;
+    }
+    .court-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .court-card.selected { border-color: var(--dark); background: var(--light-mint); }
+    .court-info { display: flex; align-items: center; gap: 14px; }
+    .court-icon {
+      width: 46px; height: 46px;
+      background: var(--light-mint);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .court-name { font-size: 16px; font-weight: 700; }
+    .court-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .availability-pill {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .pill-open { background: #e6f9ef; color: var(--success); }
+    .pill-busy { background: #fdeaea; color: var(--danger); }
+
+    /* ── Date Picker Strip ── */
+    .date-strip {
+      display: flex; gap: 8px;
+      overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none; margin-bottom: 20px;
+    }
+    .date-strip::-webkit-scrollbar { display: none; }
+    .date-pill {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 10px 14px; border-radius: 12px;
+      background: var(--card); border: 2px solid var(--border);
+      cursor: pointer; transition: all .2s;
+      min-width: 56px;
+    }
+    .date-pill .day-name { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .date-pill .day-num { font-size: 20px; font-weight: 800; color: var(--text); margin: 2px 0; }
+    .date-pill .month { font-size: 10px; color: var(--text-muted); }
+    .date-pill.active { background: var(--dark); border-color: var(--dark); }
+    .date-pill.active .day-name,
+    .date-pill.active .day-num,
+    .date-pill.active .month { color: #fff; }
+
+    /* ── Time Slots ── */
+    .time-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-bottom: 20px;
+    }
+    .time-slot {
+      padding: 12px 8px; border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      text-align: center; cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--text);
+      transition: all .18s;
+    }
+    .time-slot:hover { border-color: var(--primary); }
+    .time-slot.active { background: var(--dark); border-color: var(--dark); color: #fff; }
+    .time-slot.booked {
+      background: #f5f5f5; border-color: #e0e0e0;
+      color: #bbb; cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      display: flex; align-items: center;
+      gap: 0; margin-bottom: 22px;
+    }
+    .step {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+    }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--border); color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .step.done .step-num { background: var(--success); color: #fff; }
+    .step.active .step-num { background: var(--dark); color: #fff; }
+    .step.active { color: var(--dark); }
+    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 6px; }
+    .step-line.done { background: var(--success); }
+
+    /* ── Booking Detail Row ── */
+    .detail-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { font-size: 13px; color: var(--text-muted); }
+    .detail-val { font-size: 14px; font-weight: 700; color: var(--text); }
+
+    /* ── Booking List Item ── */
+    .booking-item {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      border-left: 4px solid var(--primary);
+    }
+    .booking-item.cancelled { border-left-color: var(--danger); opacity: .7; }
+    .booking-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .booking-name { font-size: 16px; font-weight: 800; }
+    .booking-court { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .booking-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+    .booking-meta-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--text-muted);
+    }
+    .status-pill {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .status-confirmed { background: #e6f9ef; color: var(--success); }
+    .status-cancelled { background: #fdeaea; color: var(--danger); }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center; padding: 50px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; }
+    .empty-state h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; line-height: 1.5; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: var(--text); color: #fff;
+      padding: 12px 24px; border-radius: 10px;
+      font-size: 14px; font-weight: 600;
+      opacity: 0; transition: opacity .3s;
+      pointer-events: none; z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ── Modal Overlay ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      display: flex; align-items: flex-end; justify-content: center;
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-sheet {
+      background: var(--card);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%; max-width: 480px;
+      transform: translateY(100%);
+      transition: transform .3s ease;
+    }
+    .modal-overlay.open .modal-sheet { transform: translateY(0); }
+    .modal-title {
+      font-size: 18px; font-weight: 800;
+      margin-bottom: 20px; text-align: center;
+    }
+
+    /* ── Search Box ── */
+    .search-box {
+      display: flex; gap: 8px; margin-bottom: 20px;
+    }
+    .search-box input {
+      flex: 1; padding: 12px 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 15px; background: var(--bg);
+    }
+    .search-box button {
+      padding: 12px 16px; background: var(--dark);
+      color: #fff; border: none; border-radius: 10px;
+      font-weight: 700; cursor: pointer; font-size: 14px;
+    }
+
+    /* ── Tab Bar ── */
+    .tab-bar {
+      display: flex; background: var(--light-mint);
+      border-radius: 10px; padding: 4px;
+      margin-bottom: 18px;
+    }
+    .tab {
+      flex: 1; padding: 9px; border: none; background: none;
+      border-radius: 7px; font-size: 13px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer; transition: all .2s;
+    }
+    .tab.active { background: var(--card); color: var(--dark); box-shadow: 0 1px 6px rgba(0,0,0,.1); }
+
+    /* ── Stats ── */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .stat-card {
+      background: var(--card); border-radius: 12px;
+      padding: 14px 10px; text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .stat-num { font-size: 26px; font-weight: 900; color: var(--dark); }
+    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+    /* ── Confirm Screen ── */
+    .confirm-icon {
+      width: 80px; height: 80px;
+      background: #e6f9ef; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; margin: 0 auto 18px;
+    }
+
+    /* ── Misc ── */
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-20 { margin-top: 20px; }
+    .gap-10 { gap: 10px; }
+    .text-center { text-align: center; }
+    .text-muted { color: var(--text-muted); font-size: 13px; }
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; color: var(--dark);
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      margin-bottom: 16px; padding: 4px 0;
+    }
+    .back-btn:hover { opacity: .7; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🎾</div>
+      Padel <span>Bay</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="showAdminModal()">⚙ Admin</button>
+    </div>
+  </div>
+
+  <!-- Content (swapped by JS) -->
+  <div class="content" id="content"></div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="navigate('home')">
+      <span class="nav-icon">🏠</span> Home
+    </button>
+    <button class="nav-item" id="nav-book" onclick="navigate('book')">
+      <span class="nav-icon">📅</span> Book
+    </button>
+    <button class="nav-item" id="nav-mybookings" onclick="navigate('mybookings')">
+      <span class="nav-icon">📋</span> My Bookings
+    </button>
+  </nav>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Admin Modal -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-sheet">
+    <div class="modal-title">🔐 Admin Access</div>
+    <div id="adminModalContent"></div>
+  </div>
+</div>
+
+<!-- Cancel Confirm Modal -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal-sheet">
+    <div class="modal-title">Cancel Booking?</div>
+    <p class="text-muted text-center" style="margin-bottom:20px">This booking will be marked as cancelled and the time slot will be freed up.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" onclick="closeModal('cancelModal')">Keep it</button>
+      <button class="btn btn-danger" onclick="confirmCancel()">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────
+const ADMIN_PASS = 'padelbay2024';
+const COURTS = [
+  { id: 1, name: 'Court 1', type: 'Outdoor • Glass Back' },
+  { id: 2, name: 'Court 2', type: 'Outdoor • Panoramic' },
+  { id: 3, name: 'Court 3', type: 'Indoor • Premium' },
+];
+const HOURS = [
+  '7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM',
+  '1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM',
+  '7:00 PM','8:00 PM','9:00 PM','10:00 PM'
+];
+
+let bookings = JSON.parse(localStorage.getItem('pbBookings') || '[]');
+let view = 'home';
+let adminLoggedIn = false;
+
+// Booking flow state
+let bDate = '';
+let bCourt = null;
+let bTime = '';
+let bStep = 1; // 1=date+court, 2=time, 3=details
+
+// Cancel state
+let cancelId = null;
+
+// My bookings search
+let mbPhone = '';
+
+// Admin tab
+let adminTab = 'all';
+
+function saveBookings() {
+  localStorage.setItem('pbBookings', JSON.stringify(bookings));
+}
+
+function genId() {
+  return 'PB' + Date.now().toString(36).toUpperCase().slice(-5);
+}
+
+// ────────────────────────────────────────────────
+// NAVIGATION
+// ────────────────────────────────────────────────
+function navigate(v) {
+  view = v;
+  if (v === 'book') { bStep = 1; bDate = ''; bCourt = null; bTime = ''; }
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const ni = document.getElementById('nav-' + v);
+  if (ni) ni.classList.add('active');
+  render();
+}
+
+function render() {
+  const c = document.getElementById('content');
+  if (view === 'home')        c.innerHTML = renderHome();
+  else if (view === 'book')   c.innerHTML = renderBook();
+  else if (view === 'mybookings') c.innerHTML = renderMyBookings();
+  else if (view === 'admin')  c.innerHTML = renderAdmin();
+}
+
+// ────────────────────────────────────────────────
+// HOME VIEW
+// ────────────────────────────────────────────────
+function renderHome() {
+  const todayStr = todayDate();
+  const todayBookings = bookings.filter(b => b.date === todayStr && b.status !== 'cancelled');
+  const totalToday = todayBookings.length;
+  const totalAll = bookings.filter(b => b.status !== 'cancelled').length;
+
+  return `
+    <div class="hero">
+      <h2>Welcome to Padel Bay 🎾</h2>
+      <p>Book your court in seconds. 3 courts available.</p>
+      <button class="btn btn-primary" style="background:#94ceae;color:#1a2e2b;max-width:200px" onclick="navigate('book')">Book a Court</button>
+    </div>
+
+    <div class="section-title">📊 Today's Overview</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">${totalToday}</div>
+        <div class="stat-label">Bookings Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${3 - [...new Set(todayBookings.map(b=>b.court))].length}</div>
+        <div class="stat-label">Courts Free</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${totalAll}</div>
+        <div class="stat-label">All Time</div>
+      </div>
+    </div>
+
+    <div class="section-title">🏟 Our Courts</div>
+    <div class="courts-grid">
+      ${COURTS.map(court => {
+        const slots = bookedSlotsFor(court.id, todayStr);
+        const free = HOURS.length - slots.length;
+        return `
+          <div class="court-card" onclick="quickBook(${court.id})">
+            <div class="court-info">
+              <div class="court-icon">🎾</div>
+              <div>
+                <div class="court-name">${court.name}</div>
+                <div class="court-sub">${court.type}</div>
+              </div>
+            </div>
+            <div>
+              <div class="availability-pill ${free > 0 ? 'pill-open' : 'pill-busy'}">
+                ${free > 0 ? free + ' slots free' : 'Full today'}
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    ${todayBookings.length > 0 ? `
+      <div class="section-title mt-20">📅 Today's Bookings</div>
+      ${todayBookings.slice(0,3).map(b => bookingCard(b, false)).join('')}
+      ${todayBookings.length > 3 ? `<p class="text-muted text-center mt-12">+${todayBookings.length - 3} more — check Admin for full list</p>` : ''}
+    ` : ''}
+  `;
+}
+
+function quickBook(courtId) {
+  bCourt = courtId;
+  bDate = todayDate();
+  bStep = 2;
+  navigate('book');
+}
+
+// ────────────────────────────────────────────────
+// BOOK VIEW
+// ────────────────────────────────────────────────
+function renderBook() {
+  if (bStep === 1) return renderBookStep1();
+  if (bStep === 2) return renderBookStep2();
+  if (bStep === 3) return renderBookStep3();
+  if (bStep === 4) return renderBookConfirm();
+}
+
+function renderBookStep1() {
+  const dates = getDateOptions(14);
+  return `
+    ${stepsBar(1)}
+
+    <div class="section-title">📅 Select a Date</div>
+    <div class="date-strip">
+      ${dates.map(d => `
+        <div class="date-pill ${bDate === d.value ? 'active' : ''}" onclick="selectDate('${d.value}')">
+          <span class="day-name">${d.dayName}</span>
+          <span class="day-num">${d.dayNum}</span>
+          <span class="month">${d.month}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-title">🏟 Select a Court</div>
+    <div class="courts-grid">
+      ${COURTS.map(court => {
+        const slots = bDate ? bookedSlotsFor(court.id, bDate) : [];
+        const free = HOURS.length - slots.length;
+        return `
+          <div class="court-card ${bCourt === court.id ? 'selected' : ''}" onclick="selectCourt(${court.id})">
+            <div class="court-info">
+              <div class="court-icon">🎾</div>
+              <div>
+                <div class="court-name">${court.name}</div>
+                <div class="court-sub">${court.type}</div>
+              </div>
+            </div>
+            ${bDate ? `<div class="availability-pill ${free > 0 ? 'pill-open' : 'pill-busy'}">${free > 0 ? free + ' free' : 'Full'}</div>` : ''}
+          </div>`;
+      }).join('')}
+    </div>
+
+    <button class="btn btn-primary mt-16" onclick="goToStep2()" ${!bDate || !bCourt ? 'disabled style="opacity:.4"' : ''}>
+      Continue →
+    </button>
+  `;
+}
+
+function renderBookStep2() {
+  const booked = bookedSlotsFor(bCourt, bDate);
+  const courtName = COURTS.find(c => c.id === bCourt).name;
+
+  return `
+    ${stepsBar(2)}
+    <button class="back-btn" onclick="bStep=1;render()">← Back</button>
+
+    <div class="card card-sm" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:800;font-size:15px">${courtName}</div>
+          <div class="text-muted">${formatDate(bDate)}</div>
+        </div>
+        <span style="font-size:22px">🎾</span>
+      </div>
+    </div>
+
+    <div class="section-title">⏰ Pick a Time Slot</div>
+    <div class="time-grid">
+      ${HOURS.map(h => {
+        const isBooked = booked.includes(h);
+        return `<div class="time-slot ${isBooked ? 'booked' : ''} ${bTime === h && !isBooked ? 'active' : ''}"
+          onclick="${isBooked ? '' : `selectTime('${h}')`}">${h}</div>`;
+      }).join('')}
+    </div>
+
+    <button class="btn btn-primary" onclick="goToStep3()" ${!bTime ? 'disabled style="opacity:.4"' : ''}>
+      Continue →
+    </button>
+  `;
+}
+
+function renderBookStep3() {
+  const courtName = COURTS.find(c => c.id === bCourt).name;
+  return `
+    ${stepsBar(3)}
+    <button class="back-btn" onclick="bStep=2;render()">← Back</button>
+
+    <div class="card card-sm" style="margin-bottom:20px">
+      <div class="detail-row">
+        <span class="detail-label">Court</span>
+        <span class="detail-val">${courtName}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Date</span>
+        <span class="detail-val">${formatDate(bDate)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Time</span>
+        <span class="detail-val">${bTime}</span>
+      </div>
+    </div>
+
+    <div class="section-title">👤 Your Details</div>
+    <div class="card">
+      <div class="field">
+        <label>Full Name *</label>
+        <input type="text" id="inp-name" placeholder="e.g. Omar Jheir" />
+      </div>
+      <div class="field">
+        <label>Phone Number *</label>
+        <input type="tel" id="inp-phone" placeholder="e.g. +971 50 123 4567" />
+      </div>
+      <div class="field">
+        <label>Email (optional)</label>
+        <input type="email" id="inp-email" placeholder="your@email.com" />
+      </div>
+      <div class="field">
+        <label>Note (optional)</label>
+        <input type="text" id="inp-note" placeholder="e.g. 4 players, need balls" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="submitBooking()">Confirm Booking ✓</button>
+  `;
+}
+
+function renderBookConfirm() {
+  const last = bookings[bookings.length - 1];
+  if (!last) { navigate('home'); return ''; }
+  const courtName = COURTS.find(c => c.id === last.court).name;
+  return `
+    <div style="text-align:center;padding:20px 0">
+      <div class="confirm-icon">✅</div>
+      <h2 style="font-size:24px;font-weight:900;margin-bottom:8px">Booking Confirmed!</h2>
+      <p class="text-muted">Your court is all set, ${last.name.split(' ')[0]}!</p>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div style="text-align:center;margin-bottom:14px">
+        <span style="font-size:12px;font-weight:700;color:var(--text-muted)">BOOKING ID</span><br>
+        <span style="font-size:22px;font-weight:900;color:var(--dark);letter-spacing:2px">${last.id}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Court</span>
+        <span class="detail-val">${courtName}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Date</span>
+        <span class="detail-val">${formatDate(last.date)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Time</span>
+        <span class="detail-val">${last.time}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Name</span>
+        <span class="detail-val">${last.name}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Phone</span>
+        <span class="detail-val">${last.phone}</span>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary mt-16" onclick="navigate('home')">Back to Home</button>
+    <button class="btn btn-primary mt-12" onclick="navigate('book')">Book Another Court</button>
+  `;
+}
+
+function stepsBar(active) {
+  const labels = ['Date & Court', 'Time', 'Your Info'];
+  return `
+    <div class="steps">
+      ${labels.map((l, i) => {
+        const n = i + 1;
+        const cls = n < active ? 'done' : n === active ? 'active' : '';
+        return `
+          ${i > 0 ? `<div class="step-line ${n <= active ? 'done' : ''}"></div>` : ''}
+          <div class="step ${cls}">
+            <div class="step-num">${n < active ? '✓' : n}</div>
+            <span>${l}</span>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function goToStep2() {
+  if (!bDate || !bCourt) return showToast('Please select a date and court');
+  bStep = 2; render();
+}
+function goToStep3() {
+  if (!bTime) return showToast('Please select a time slot');
+  bStep = 3; render();
+}
+function selectDate(d) { bDate = d; render(); }
+function selectCourt(id) { bCourt = id; render(); }
+function selectTime(t) { bTime = t; render(); }
+
+function submitBooking() {
+  const name  = document.getElementById('inp-name')?.value.trim();
+  const phone = document.getElementById('inp-phone')?.value.trim();
+  const email = document.getElementById('inp-email')?.value.trim();
+  const note  = document.getElementById('inp-note')?.value.trim();
+
+  if (!name)  return showToast('Please enter your name');
+  if (!phone) return showToast('Please enter your phone number');
+
+  // Double-check slot is still free
+  const taken = bookedSlotsFor(bCourt, bDate);
+  if (taken.includes(bTime)) return showToast('Sorry, this slot was just booked. Please pick another.');
+
+  const booking = {
+    id: genId(),
+    court: bCourt,
+    date: bDate,
+    time: bTime,
+    name, phone, email, note,
+    status: 'confirmed',
+    createdAt: new Date().toISOString(),
+  };
+  bookings.push(booking);
+  saveBookings();
+  bStep = 4;
+  render();
+}
+
+// ────────────────────────────────────────────────
+// MY BOOKINGS VIEW
+// ────────────────────────────────────────────────
+function renderMyBookings() {
+  let filtered = mbPhone
+    ? bookings.filter(b => b.phone.replace(/\s/g,'').includes(mbPhone.replace(/\s/g,'')))
+    : [];
+
+  return `
+    <div class="section-title">📋 My Bookings</div>
+    <p class="text-muted" style="margin-bottom:16px">Enter your phone number to find your bookings.</p>
+
+    <div class="search-box">
+      <input type="tel" id="mb-phone" placeholder="Your phone number" value="${mbPhone}"
+        onkeydown="if(event.key==='Enter')searchMyBookings()" />
+      <button onclick="searchMyBookings()">Search</button>
+    </div>
+
+    ${mbPhone && filtered.length === 0 ? `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No bookings found</h3>
+        <p>No bookings found for this phone number.</p>
+      </div>
+    ` : ''}
+
+    ${filtered.map(b => bookingCard(b, true)).join('')}
+  `;
+}
+
+function searchMyBookings() {
+  mbPhone = document.getElementById('mb-phone')?.value.trim();
+  render();
+}
+
+// ────────────────────────────────────────────────
+// ADMIN VIEW
+// ────────────────────────────────────────────────
+function renderAdmin() {
+  const today = todayDate();
+  let filtered = bookings;
+  if (adminTab === 'today') filtered = bookings.filter(b => b.date === today);
+  if (adminTab === 'upcoming') filtered = bookings.filter(b => b.date >= today && b.status !== 'cancelled');
+  if (adminTab === 'cancelled') filtered = bookings.filter(b => b.status === 'cancelled');
+
+  const confirmed = bookings.filter(b => b.status !== 'cancelled').length;
+  const todayCount = bookings.filter(b => b.date === today && b.status !== 'cancelled').length;
+  const cancelled = bookings.filter(b => b.status === 'cancelled').length;
+
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="section-title" style="margin:0">⚙ Admin Panel</div>
+      <button class="btn btn-primary btn-sm" onclick="navigate('book')">+ New Booking</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">${todayCount}</div>
+        <div class="stat-label">Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${confirmed}</div>
+        <div class="stat-label">Confirmed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${cancelled}</div>
+        <div class="stat-label">Cancelled</div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab ${adminTab==='all'?'active':''}" onclick="setAdminTab('all')">All</button>
+      <button class="tab ${adminTab==='today'?'active':''}" onclick="setAdminTab('today')">Today</button>
+      <button class="tab ${adminTab==='upcoming'?'active':''}" onclick="setAdminTab('upcoming')">Upcoming</button>
+      <button class="tab ${adminTab==='cancelled'?'active':''}" onclick="setAdminTab('cancelled')">Cancelled</button>
+    </div>
+
+    ${filtered.length === 0 ? `
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No bookings here</h3>
+        <p>Bookings will appear here once they're made.</p>
+      </div>
+    ` : filtered.slice().reverse().map(b => bookingCard(b, true)).join('')}
+  `;
+}
+
+function setAdminTab(t) { adminTab = t; render(); }
+
+// ────────────────────────────────────────────────
+// SHARED BOOKING CARD
+// ────────────────────────────────────────────────
+function bookingCard(b, showCancel) {
+  const courtName = COURTS.find(c => c.id === b.court)?.name || 'Court';
+  const isPast = b.date < todayDate();
+  return `
+    <div class="booking-item ${b.status === 'cancelled' ? 'cancelled' : ''}">
+      <div class="booking-header">
+        <div>
+          <div class="booking-name">${b.name}</div>
+          <div class="booking-court">${courtName}</div>
+        </div>
+        <div class="status-pill ${b.status === 'cancelled' ? 'status-cancelled' : 'status-confirmed'}">
+          ${b.status === 'cancelled' ? 'Cancelled' : isPast ? 'Completed' : 'Confirmed'}
+        </div>
+      </div>
+      <div class="booking-meta">
+        <div class="booking-meta-item">📅 ${formatDate(b.date)}</div>
+        <div class="booking-meta-item">⏰ ${b.time}</div>
+        <div class="booking-meta-item">📞 ${b.phone}</div>
+        ${b.id ? `<div class="booking-meta-item">🆔 ${b.id}</div>` : ''}
+      </div>
+      ${b.note ? `<div class="text-muted" style="font-size:12px;margin-top:8px">📝 ${b.note}</div>` : ''}
+      ${showCancel && b.status !== 'cancelled' && !isPast ? `
+        <div style="margin-top:12px">
+          <button class="btn btn-danger btn-sm" onclick="requestCancel('${b.id}')">Cancel Booking</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ────────────────────────────────────────────────
+// CANCEL LOGIC
+// ────────────────────────────────────────────────
+function requestCancel(id) {
+  cancelId = id;
+  openModal('cancelModal');
+}
+function confirmCancel() {
+  const idx = bookings.findIndex(b => b.id === cancelId);
+  if (idx !== -1) {
+    bookings[idx].status = 'cancelled';
+    saveBookings();
+    showToast('Booking cancelled');
+  }
+  closeModal('cancelModal');
+  render();
+}
+
+// ────────────────────────────────────────────────
+// ADMIN MODAL
+// ────────────────────────────────────────────────
+function showAdminModal() {
+  if (adminLoggedIn) {
+    document.getElementById('adminModalContent').innerHTML = `
+      <p class="text-muted text-center" style="margin-bottom:16px">You are logged in as Admin.</p>
+      <button class="btn btn-primary" onclick="closeModal('adminModal');view='admin';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));render()">Go to Admin Panel</button>
+      <button class="btn btn-secondary mt-12" onclick="adminLoggedIn=false;showToast('Logged out');closeModal('adminModal')">Log out</button>
+    `;
+  } else {
+    document.getElementById('adminModalContent').innerHTML = `
+      <div class="field">
+        <label>Admin Password</label>
+        <input type="password" id="admin-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')tryAdminLogin()" />
+      </div>
+      <button class="btn btn-primary" onclick="tryAdminLogin()">Login</button>
+      <button class="btn btn-secondary mt-12" onclick="closeModal('adminModal')">Cancel</button>
+    `;
+  }
+  openModal('adminModal');
+}
+
+function tryAdminLogin() {
+  const pass = document.getElementById('admin-pass')?.value;
+  if (pass === ADMIN_PASS) {
+    adminLoggedIn = true;
+    closeModal('adminModal');
+    view = 'admin';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    render();
+    showToast('Welcome, Admin!');
+  } else {
+    showToast('Incorrect password');
+  }
+}
+
+// ────────────────────────────────────────────────
+// MODALS
+// ────────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.getElementById('adminModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('adminModal');
+});
+document.getElementById('cancelModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('cancelModal');
+});
+
+// ────────────────────────────────────────────────
+// HELPERS
+// ────────────────────────────────────────────────
+function bookedSlotsFor(courtId, date) {
+  return bookings
+    .filter(b => b.court === courtId && b.date === date && b.status !== 'cancelled')
+    .map(b => b.time);
+}
+
+function todayDate() {
+  const d = new Date();
+  return d.toISOString().split('T')[0];
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function getDateOptions(days) {
+  const opts = [];
+  for (let i = 0; i < days; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    const value = d.toISOString().split('T')[0];
+    opts.push({
+      value,
+      dayName: d.toLocaleDateString('en-GB', { weekday: 'short' }),
+      dayNum:  d.getDate(),
+      month:   d.toLocaleDateString('en-GB', { month: 'short' }),
+    });
+  }
+  return opts;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
