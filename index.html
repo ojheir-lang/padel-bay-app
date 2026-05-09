@@ -3,485 +3,597 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Padel Bay – Court Booking</title>
+  <title>Padel Bay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* ── Brand Tokens ── */
     :root {
-      --primary:   #94ceae;
-      --dark:      #24646e;
-      --light-mint:#d4e8e2;
-      --sage:      #b5c5c0;
-      --bg:        #f2f8f6;
-      --card:      #ffffff;
-      --text:      #1a2e2b;
-      --text-muted:#5a7a76;
-      --border:    #ddeee8;
-      --danger:    #e05252;
-      --success:   #3cae7c;
-      --shadow:    0 2px 16px rgba(36,100,110,.10);
-      --radius:    14px;
+      --mint:       #94ceae;
+      --teal:       #24646e;
+      --teal-dark:  #1a4f58;
+      --teal-light: #2d7a87;
+      --sage:       #b5c5c0;
+      --foam:       #d4e8e2;
+      --bg:         #f0f5f4;
+      --white:      #ffffff;
+      --text:       #0f1f1d;
+      --text-2:     #4a6a66;
+      --text-3:     #8aada9;
+      --border:     #e0edea;
+      --red:        #ff5252;
+      --green:      #2ecc8a;
+      --r:          16px;
+      --r-lg:       24px;
+      --shadow-sm:  0 1px 4px rgba(15,31,29,.06);
+      --shadow:     0 4px 24px rgba(15,31,29,.08);
+      --shadow-lg:  0 8px 40px rgba(15,31,29,.12);
     }
 
-    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── App Shell ── */
     #app {
       width: 100%;
-      max-width: 480px;
+      max-width: 430px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       background: var(--bg);
       position: relative;
+      overflow-x: hidden;
     }
 
-    /* ── Header ── */
+    /* ── HEADER ── */
     .header {
-      background: var(--dark);
-      color: #fff;
-      padding: 18px 20px 16px;
+      background: var(--teal);
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
     }
-    .header .logo {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .logo {
+      display: flex; align-items: center; gap: 10px;
     }
-    .header .logo span { color: var(--primary); }
-    .logo-icon {
-      width: 32px; height: 32px;
-      background: var(--primary);
-      border-radius: 8px;
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--mint), #6dbf95);
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
     }
-    .header-actions { display: flex; gap: 10px; }
-    .btn-icon {
+    .logo-text {
+      font-size: 18px; font-weight: 800;
+      color: #fff; letter-spacing: -.3px;
+    }
+    .logo-text span { color: var(--mint); }
+    .admin-btn {
       background: rgba(255,255,255,.12);
-      border: none; border-radius: 8px;
-      color: #fff; cursor: pointer;
-      padding: 6px 12px; font-size: 13px;
-      font-weight: 600; transition: background .2s;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 10px;
+      color: rgba(255,255,255,.9);
+      font-size: 13px; font-weight: 600;
+      padding: 7px 14px; cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background .2s;
+      display: flex; align-items: center; gap: 5px;
     }
-    .btn-icon:hover { background: rgba(255,255,255,.22); }
+    .admin-btn:hover { background: rgba(255,255,255,.2); }
 
-    /* ── Content Area ── */
-    .content { flex: 1; padding: 20px 16px 100px; }
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      padding: 20px 16px 110px;
+      animation: fadeUp .25s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-    /* ── Bottom Nav ── */
+    /* ── BOTTOM NAV ── */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      max-width: 480px;
-      background: var(--card);
+      position: fixed; bottom: 0;
+      width: 100%; max-width: 430px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--border);
       display: flex;
-      padding: 10px 0 20px;
+      padding: 10px 8px 26px;
       z-index: 100;
-      box-shadow: 0 -4px 20px rgba(0,0,0,.06);
     }
     .nav-item {
       flex: 1; display: flex; flex-direction: column;
-      align-items: center; gap: 4px;
-      cursor: pointer; padding: 4px 0;
-      color: var(--text-muted); font-size: 11px; font-weight: 600;
+      align-items: center; gap: 3px;
+      cursor: pointer; padding: 6px 4px;
+      color: var(--text-3); font-size: 10px; font-weight: 600;
+      letter-spacing: .3px; text-transform: uppercase;
       transition: color .2s;
       border: none; background: none;
     }
-    .nav-item.active { color: var(--dark); }
-    .nav-item .nav-icon { font-size: 22px; }
+    .nav-item .nav-icon {
+      width: 44px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; font-size: 20px;
+      transition: background .2s;
+    }
+    .nav-item.active { color: var(--teal); }
+    .nav-item.active .nav-icon { background: var(--foam); }
 
-    /* ── Cards ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      margin-bottom: 14px;
-    }
-    .card-sm { padding: 14px 16px; }
-
-    /* ── Buttons ── */
-    .btn {
-      display: block; width: 100%;
-      padding: 15px; border: none; border-radius: 12px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      transition: opacity .18s, transform .12s;
-      text-align: center; letter-spacing: .2px;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary { background: var(--dark); color: #fff; }
-    .btn-primary:hover { opacity: .9; }
-    .btn-secondary { background: var(--light-mint); color: var(--dark); }
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-sm {
-      padding: 8px 16px; border-radius: 8px;
-      font-size: 13px; font-weight: 700; width: auto;
-      display: inline-block;
-    }
-
-    /* ── Inputs ── */
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-    .field input, .field select {
-      width: 100%; padding: 13px 14px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; color: var(--text); background: var(--bg);
-      transition: border-color .2s;
-      -webkit-appearance: none;
-    }
-    .field input:focus, .field select:focus {
-      outline: none; border-color: var(--primary);
-      background: #fff;
-    }
-
-    /* ── Hero ── */
+    /* ── HERO ── */
     .hero {
-      background: linear-gradient(135deg, var(--dark) 0%, #1a4f58 100%);
-      border-radius: var(--radius);
-      padding: 28px 22px;
+      background: linear-gradient(140deg, var(--teal) 0%, var(--teal-light) 60%, #3a9aaa 100%);
+      border-radius: var(--r-lg);
+      padding: 28px 24px 24px;
       color: #fff;
       margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-    .hero::after {
-      content: '🎾';
-      position: absolute; right: 20px; top: 20px;
-      font-size: 64px; opacity: .15;
+    .hero-bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
     }
-    .hero h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-    .hero p { font-size: 14px; opacity: .8; margin-bottom: 20px; }
+    .hero-bg-circle.c1 { width: 160px; height: 160px; right: -40px; top: -40px; }
+    .hero-bg-circle.c2 { width: 100px; height: 100px; right: 30px; bottom: -30px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 4px 12px; font-size: 11px; font-weight: 600;
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero h2 {
+      font-size: 26px; font-weight: 900;
+      letter-spacing: -.5px; line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .hero p { font-size: 14px; opacity: .75; margin-bottom: 20px; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--mint);
+      color: var(--teal-dark);
+      font-size: 14px; font-weight: 800;
+      padding: 12px 22px; border-radius: 12px;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(148,206,174,.4);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .hero-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(148,206,174,.5); }
+    .hero-cta:active { transform: scale(.97); }
 
-    /* ── Section Title ── */
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-num {
+      font-size: 28px; font-weight: 900;
+      color: var(--teal); letter-spacing: -1px;
+    }
+    .stat-label { font-size: 10px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+    /* ── SECTION TITLE ── */
     .section-title {
-      font-size: 16px; font-weight: 800;
-      color: var(--text); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-3); text-transform: uppercase;
+      letter-spacing: .8px; margin-bottom: 12px;
     }
 
-    /* ── Court Cards ── */
-    .courts-grid { display: flex; flex-direction: column; gap: 12px; }
+    /* ── COURT CARDS ── */
     .court-card {
-      background: var(--card);
-      border-radius: var(--radius);
+      background: var(--white);
+      border-radius: var(--r);
       padding: 16px 18px;
-      box-shadow: var(--shadow);
       display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer;
+      margin-bottom: 10px;
       border: 2px solid transparent;
-      transition: border-color .2s, transform .15s;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s, transform .15s;
     }
-    .court-card:hover { border-color: var(--primary); transform: translateY(-1px); }
-    .court-card.selected { border-color: var(--dark); background: var(--light-mint); }
-    .court-info { display: flex; align-items: center; gap: 14px; }
-    .court-icon {
-      width: 46px; height: 46px;
-      background: var(--light-mint);
-      border-radius: 12px;
+    .court-card:hover { border-color: var(--foam); box-shadow: var(--shadow); transform: translateY(-1px); }
+    .court-card.selected { border-color: var(--teal); background: #f5fbf9; }
+    .court-left { display: flex; align-items: center; gap: 14px; }
+    .court-icon-wrap {
+      width: 48px; height: 48px;
+      background: var(--foam);
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px;
     }
-    .court-name { font-size: 16px; font-weight: 700; }
-    .court-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .availability-pill {
+    .court-name { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
+    .court-type { font-size: 12px; color: var(--text-3); margin-top: 2px; font-weight: 500; }
+    .avail-badge {
       font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 20px;
+      padding: 5px 11px; border-radius: 20px;
+      letter-spacing: .2px;
     }
-    .pill-open { background: #e6f9ef; color: var(--success); }
-    .pill-busy { background: #fdeaea; color: var(--danger); }
+    .avail-open { background: #e8f9f1; color: var(--green); }
+    .avail-full  { background: #fff0f0; color: var(--red); }
 
-    /* ── Date Picker Strip ── */
+    /* ── DATE STRIP ── */
     .date-strip {
       display: flex; gap: 8px;
-      overflow-x: auto; padding-bottom: 4px;
-      scrollbar-width: none; margin-bottom: 20px;
+      overflow-x: auto; padding-bottom: 6px; margin-bottom: 24px;
+      scrollbar-width: none;
     }
     .date-strip::-webkit-scrollbar { display: none; }
     .date-pill {
       flex-shrink: 0;
       display: flex; flex-direction: column; align-items: center;
-      padding: 10px 14px; border-radius: 12px;
-      background: var(--card); border: 2px solid var(--border);
-      cursor: pointer; transition: all .2s;
-      min-width: 56px;
+      padding: 10px 14px; border-radius: 14px;
+      background: var(--white); border: 2px solid var(--border);
+      cursor: pointer; transition: all .2s; min-width: 58px;
     }
-    .date-pill .day-name { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .date-pill .day-num { font-size: 20px; font-weight: 800; color: var(--text); margin: 2px 0; }
-    .date-pill .month { font-size: 10px; color: var(--text-muted); }
-    .date-pill.active { background: var(--dark); border-color: var(--dark); }
-    .date-pill.active .day-name,
-    .date-pill.active .day-num,
-    .date-pill.active .month { color: #fff; }
+    .date-pill .dn { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
+    .date-pill .dd { font-size: 22px; font-weight: 900; color: var(--text); margin: 2px 0; letter-spacing: -1px; }
+    .date-pill .dm { font-size: 10px; color: var(--text-3); font-weight: 600; }
+    .date-pill.active { background: var(--teal); border-color: var(--teal); }
+    .date-pill.active .dn,
+    .date-pill.active .dd,
+    .date-pill.active .dm { color: #fff; }
 
-    /* ── Time Slots ── */
+    /* ── TIME GRID ── */
     .time-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 10px; margin-bottom: 20px;
+      gap: 8px; margin-bottom: 24px;
     }
     .time-slot {
-      padding: 12px 8px; border-radius: 10px;
+      padding: 13px 6px; border-radius: 12px;
       border: 2px solid var(--border);
-      background: var(--card);
+      background: var(--white);
       text-align: center; cursor: pointer;
-      font-size: 14px; font-weight: 700; color: var(--text);
+      font-size: 13px; font-weight: 700; color: var(--text);
       transition: all .18s;
     }
-    .time-slot:hover { border-color: var(--primary); }
-    .time-slot.active { background: var(--dark); border-color: var(--dark); color: #fff; }
-    .time-slot.booked {
-      background: #f5f5f5; border-color: #e0e0e0;
-      color: #bbb; cursor: not-allowed;
-      text-decoration: line-through;
-    }
+    .time-slot:hover:not(.booked) { border-color: var(--mint); background: #f5fbf9; }
+    .time-slot.active { background: var(--teal); border-color: var(--teal); color: #fff; box-shadow: 0 4px 12px rgba(36,100,110,.25); }
+    .time-slot.booked { background: var(--bg); border-color: var(--border); color: var(--text-3); cursor: not-allowed; font-weight: 500; text-decoration: line-through; }
 
-    /* ── Steps ── */
+    /* ── STEPS ── */
     .steps {
       display: flex; align-items: center;
-      gap: 0; margin-bottom: 22px;
+      margin-bottom: 24px; gap: 0;
     }
     .step {
       display: flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      font-size: 11px; font-weight: 700; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: .5px;
     }
-    .step-num {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: var(--border); color: var(--text-muted);
+    .step-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--border); color: var(--text-3);
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
     }
-    .step.done .step-num { background: var(--success); color: #fff; }
-    .step.active .step-num { background: var(--dark); color: #fff; }
-    .step.active { color: var(--dark); }
-    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 6px; }
-    .step-line.done { background: var(--success); }
+    .step.done .step-dot { background: var(--green); color: #fff; }
+    .step.active .step-dot { background: var(--teal); color: #fff; }
+    .step.active { color: var(--teal); }
+    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 8px; border-radius: 2px; }
+    .step-line.done { background: var(--green); }
 
-    /* ── Booking Detail Row ── */
+    /* ── SUMMARY CHIP ── */
+    .summary-chip {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .summary-chip-left { display: flex; align-items: center; gap: 12px; }
+    .summary-chip-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--foam);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .summary-chip-title { font-size: 14px; font-weight: 700; }
+    .summary-chip-sub { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+
+    /* ── FORM ── */
+    .form-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: var(--text-3); text-transform: uppercase;
+      letter-spacing: .6px; margin-bottom: 7px;
+    }
+    .field input {
+      width: 100%; padding: 13px 14px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 15px; color: var(--text);
+      background: var(--bg); font-family: inherit;
+      transition: border-color .2s, background .2s;
+      -webkit-appearance: none;
+    }
+    .field input::placeholder { color: var(--text-3); }
+    .field input:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: block; width: 100%;
+      padding: 15px; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 800; cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      font-family: inherit; letter-spacing: -.1px;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(36,100,110,.25);
+    }
+    .btn-primary:not(:disabled):hover { box-shadow: 0 6px 20px rgba(36,100,110,.35); transform: translateY(-1px); }
+    .btn-ghost {
+      background: var(--foam);
+      color: var(--teal);
+    }
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255,82,82,.25);
+    }
+    .btn-sm {
+      padding: 9px 18px; border-radius: 10px;
+      font-size: 13px; width: auto; display: inline-flex;
+      align-items: center; gap: 5px;
+    }
+    .mt-10 { margin-top: 10px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-20 { margin-top: 20px; }
+
+    /* ── BACK BTN ── */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none;
+      color: var(--teal); font-size: 14px; font-weight: 700;
+      cursor: pointer; margin-bottom: 20px; padding: 0;
+      font-family: inherit;
+    }
+    .back-btn:hover { opacity: .7; }
+
+    /* ── BOOKING CARD ── */
+    .booking-card {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      border-left: 3px solid var(--mint);
+      transition: box-shadow .2s;
+    }
+    .booking-card:hover { box-shadow: var(--shadow); }
+    .booking-card.cancelled { border-left-color: var(--red); opacity: .65; }
+    .bc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .bc-name { font-size: 15px; font-weight: 800; letter-spacing: -.2px; }
+    .bc-court { font-size: 12px; color: var(--text-3); margin-top: 2px; font-weight: 500; }
+    .bc-meta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .bc-meta-item {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--text-2); font-weight: 500;
+      background: var(--bg); padding: 4px 9px; border-radius: 8px;
+    }
+    .status-badge {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px; letter-spacing: .2px;
+    }
+    .status-confirmed { background: #e8f9f1; color: var(--green); }
+    .status-cancelled  { background: #fff0f0; color: var(--red); }
+    .status-completed  { background: var(--foam); color: var(--teal); }
+
+    /* ── CONFIRM SCREEN ── */
+    .success-icon {
+      width: 88px; height: 88px;
+      background: linear-gradient(135deg, #e8f9f1, var(--foam));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; margin: 8px auto 20px;
+    }
+    .booking-id-box {
+      background: var(--teal);
+      border-radius: var(--r);
+      padding: 16px;
+      text-align: center; margin-bottom: 16px;
+    }
+    .booking-id-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: 1px; }
+    .booking-id-val { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: 4px; margin-top: 4px; }
+
+    /* ── DETAIL ROW ── */
     .detail-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 12px 0; border-bottom: 1px solid var(--border);
     }
     .detail-row:last-child { border-bottom: none; }
-    .detail-label { font-size: 13px; color: var(--text-muted); }
-    .detail-val { font-size: 14px; font-weight: 700; color: var(--text); }
+    .dl { font-size: 13px; color: var(--text-3); font-weight: 500; }
+    .dv { font-size: 14px; font-weight: 700; }
 
-    /* ── Booking List Item ── */
-    .booking-item {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-      border-left: 4px solid var(--primary);
-    }
-    .booking-item.cancelled { border-left-color: var(--danger); opacity: .7; }
-    .booking-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .booking-name { font-size: 16px; font-weight: 800; }
-    .booking-court { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-    .booking-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
-    .booking-meta-item {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px; color: var(--text-muted);
-    }
-    .status-pill {
-      font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 20px;
-    }
-    .status-confirmed { background: #e6f9ef; color: var(--success); }
-    .status-cancelled { background: #fdeaea; color: var(--danger); }
-
-    /* ── Empty State ── */
+    /* ── EMPTY STATE ── */
     .empty-state {
-      text-align: center; padding: 50px 20px;
-      color: var(--text-muted);
+      text-align: center; padding: 48px 20px;
     }
-    .empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; }
-    .empty-state h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
-    .empty-state p { font-size: 14px; line-height: 1.5; }
+    .empty-icon { font-size: 52px; margin-bottom: 14px; }
+    .empty-state h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+    .empty-state p { font-size: 13px; color: var(--text-3); line-height: 1.6; }
 
-    /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-      background: var(--text); color: #fff;
-      padding: 12px 24px; border-radius: 10px;
-      font-size: 14px; font-weight: 600;
-      opacity: 0; transition: opacity .3s;
-      pointer-events: none; z-index: 999;
-      white-space: nowrap;
+    /* ── SEARCH ── */
+    .search-wrap {
+      display: flex; gap: 8px; margin-bottom: 20px;
     }
-    .toast.show { opacity: 1; }
+    .search-wrap input {
+      flex: 1; padding: 13px 16px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 15px; background: var(--white);
+      font-family: inherit; color: var(--text);
+      transition: border-color .2s;
+    }
+    .search-wrap input:focus { outline: none; border-color: var(--teal); }
+    .search-wrap button {
+      padding: 13px 18px; background: var(--teal);
+      color: #fff; border: none; border-radius: 12px;
+      font-weight: 700; cursor: pointer; font-size: 14px;
+      font-family: inherit;
+    }
 
-    /* ── Modal Overlay ── */
+    /* ── TAB BAR ── */
+    .tab-bar {
+      display: flex; background: var(--white);
+      border-radius: 12px; padding: 4px;
+      margin-bottom: 16px; gap: 2px;
+      box-shadow: var(--shadow-sm);
+    }
+    .tab {
+      flex: 1; padding: 9px 6px; border: none; background: none;
+      border-radius: 9px; font-size: 12px; font-weight: 700;
+      color: var(--text-3); cursor: pointer; transition: all .2s;
+      font-family: inherit;
+    }
+    .tab.active { background: var(--teal); color: #fff; box-shadow: 0 2px 8px rgba(36,100,110,.2); }
+
+    /* ── MODAL ── */
     .modal-overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.45);
+      background: rgba(15,31,29,.5);
       display: flex; align-items: flex-end; justify-content: center;
       z-index: 200; opacity: 0; pointer-events: none;
       transition: opacity .25s;
+      backdrop-filter: blur(4px);
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal-sheet {
-      background: var(--card);
-      border-radius: 20px 20px 0 0;
-      padding: 24px 20px 36px;
-      width: 100%; max-width: 480px;
+      background: var(--white);
+      border-radius: 24px 24px 0 0;
+      padding: 28px 20px 36px;
+      width: 100%; max-width: 430px;
       transform: translateY(100%);
-      transition: transform .3s ease;
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
     }
     .modal-overlay.open .modal-sheet { transform: translateY(0); }
-    .modal-title {
-      font-size: 18px; font-weight: 800;
-      margin-bottom: 20px; text-align: center;
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--border); border-radius: 4px;
+      margin: 0 auto 20px;
     }
+    .modal-title { font-size: 18px; font-weight: 800; text-align: center; margin-bottom: 20px; }
 
-    /* ── Search Box ── */
-    .search-box {
-      display: flex; gap: 8px; margin-bottom: 20px;
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 100px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text); color: #fff;
+      padding: 12px 22px; border-radius: 12px;
+      font-size: 13px; font-weight: 600;
+      opacity: 0; transition: all .3s;
+      pointer-events: none; z-index: 999;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
     }
-    .search-box input {
-      flex: 1; padding: 12px 14px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; background: var(--bg);
-    }
-    .search-box button {
-      padding: 12px 16px; background: var(--dark);
-      color: #fff; border: none; border-radius: 10px;
-      font-weight: 700; cursor: pointer; font-size: 14px;
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Tab Bar ── */
-    .tab-bar {
-      display: flex; background: var(--light-mint);
-      border-radius: 10px; padding: 4px;
-      margin-bottom: 18px;
+    /* ── TODAY BOOKINGS ── */
+    .today-empty {
+      background: var(--white); border-radius: var(--r);
+      padding: 20px; text-align: center;
+      color: var(--text-3); font-size: 13px; font-weight: 500;
     }
-    .tab {
-      flex: 1; padding: 9px; border: none; background: none;
-      border-radius: 7px; font-size: 13px; font-weight: 700;
-      color: var(--text-muted); cursor: pointer; transition: all .2s;
-    }
-    .tab.active { background: var(--card); color: var(--dark); box-shadow: 0 1px 6px rgba(0,0,0,.1); }
-
-    /* ── Stats ── */
-    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    .stat-card {
-      background: var(--card); border-radius: 12px;
-      padding: 14px 10px; text-align: center;
-      box-shadow: var(--shadow);
-    }
-    .stat-num { font-size: 26px; font-weight: 900; color: var(--dark); }
-    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
-
-    /* ── Confirm Screen ── */
-    .confirm-icon {
-      width: 80px; height: 80px;
-      background: #e6f9ef; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 40px; margin: 0 auto 18px;
-    }
-
-    /* ── Misc ── */
-    .mt-12 { margin-top: 12px; }
-    .mt-16 { margin-top: 16px; }
-    .mt-20 { margin-top: 20px; }
-    .gap-10 { gap: 10px; }
-    .text-center { text-align: center; }
-    .text-muted { color: var(--text-muted); font-size: 13px; }
-    .divider { height: 1px; background: var(--border); margin: 16px 0; }
-    .back-btn {
-      display: flex; align-items: center; gap: 6px;
-      background: none; border: none; color: var(--dark);
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      margin-bottom: 16px; padding: 4px 0;
-    }
-    .back-btn:hover { opacity: .7; }
   </style>
 </head>
 <body>
-
 <div id="app">
-  <!-- Header -->
   <div class="header">
     <div class="logo">
-      <div class="logo-icon">🎾</div>
-      Padel <span>Bay</span>
+      <div class="logo-mark">🎾</div>
+      <div class="logo-text">Padel <span>Bay</span></div>
     </div>
-    <div class="header-actions">
-      <button class="btn-icon" onclick="showAdminModal()">⚙ Admin</button>
-    </div>
+    <button class="admin-btn" onclick="showAdminModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Admin
+    </button>
   </div>
 
-  <!-- Content (swapped by JS) -->
   <div class="content" id="content"></div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <button class="nav-item active" id="nav-home" onclick="navigate('home')">
-      <span class="nav-icon">🏠</span> Home
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      Home
     </button>
     <button class="nav-item" id="nav-book" onclick="navigate('book')">
-      <span class="nav-icon">📅</span> Book
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      Book
     </button>
     <button class="nav-item" id="nav-mybookings" onclick="navigate('mybookings')">
-      <span class="nav-icon">📋</span> My Bookings
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      My Bookings
     </button>
   </nav>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <!-- Admin Modal -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal-sheet">
-    <div class="modal-title">🔐 Admin Access</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="adminModalTitle">Admin Access</div>
     <div id="adminModalContent"></div>
   </div>
 </div>
 
-<!-- Cancel Confirm Modal -->
+<!-- Cancel Modal -->
 <div class="modal-overlay" id="cancelModal">
   <div class="modal-sheet">
+    <div class="modal-handle"></div>
     <div class="modal-title">Cancel Booking?</div>
-    <p class="text-muted text-center" style="margin-bottom:20px">This booking will be marked as cancelled and the time slot will be freed up.</p>
+    <p style="text-align:center;color:var(--text-3);font-size:13px;margin-bottom:24px;line-height:1.6">This will free up the slot for others. This action cannot be undone.</p>
     <div style="display:flex;gap:10px">
-      <button class="btn btn-secondary" onclick="closeModal('cancelModal')">Keep it</button>
+      <button class="btn btn-ghost" onclick="closeModal('cancelModal')">Keep it</button>
       <button class="btn btn-danger" onclick="confirmCancel()">Yes, Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
-// ────────────────────────────────────────────────
-// STATE
-// ────────────────────────────────────────────────
+// ── CONFIG ──
 const ADMIN_PASS = 'padelbay2024';
 const COURTS = [
-  { id: 1, name: 'Court 1', type: 'Outdoor • Glass Back' },
-  { id: 2, name: 'Court 2', type: 'Outdoor • Panoramic' },
-  { id: 3, name: 'Court 3', type: 'Indoor • Premium' },
+  { id: 1, name: 'Court 1', type: 'Outdoor · Glass Back' },
+  { id: 2, name: 'Court 2', type: 'Outdoor · Panoramic' },
+  { id: 3, name: 'Court 3', type: 'Indoor · Premium' },
 ];
 const HOURS = [
   '7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM',
@@ -489,36 +601,19 @@ const HOURS = [
   '7:00 PM','8:00 PM','9:00 PM','10:00 PM'
 ];
 
-let bookings = JSON.parse(localStorage.getItem('pbBookings') || '[]');
-let view = 'home';
+// ── STATE ──
+let bookings     = JSON.parse(localStorage.getItem('pbBookings') || '[]');
+let view         = 'home';
 let adminLoggedIn = false;
-
-// Booking flow state
-let bDate = '';
-let bCourt = null;
-let bTime = '';
-let bStep = 1; // 1=date+court, 2=time, 3=details
-
-// Cancel state
+let bDate = '', bCourt = null, bTime = '', bStep = 1;
 let cancelId = null;
-
-// My bookings search
 let mbPhone = '';
-
-// Admin tab
 let adminTab = 'all';
 
-function saveBookings() {
-  localStorage.setItem('pbBookings', JSON.stringify(bookings));
-}
+function save() { localStorage.setItem('pbBookings', JSON.stringify(bookings)); }
+function genId() { return 'PB' + Date.now().toString(36).toUpperCase().slice(-5); }
 
-function genId() {
-  return 'PB' + Date.now().toString(36).toUpperCase().slice(-5);
-}
-
-// ────────────────────────────────────────────────
-// NAVIGATION
-// ────────────────────────────────────────────────
+// ── NAVIGATION ──
 function navigate(v) {
   view = v;
   if (v === 'book') { bStep = 1; bDate = ''; bCourt = null; bTime = ''; }
@@ -530,196 +625,174 @@ function navigate(v) {
 
 function render() {
   const c = document.getElementById('content');
-  if (view === 'home')        c.innerHTML = renderHome();
-  else if (view === 'book')   c.innerHTML = renderBook();
+  c.innerHTML = '';
+  if (view === 'home')       c.innerHTML = renderHome();
+  else if (view === 'book')  c.innerHTML = renderBook();
   else if (view === 'mybookings') c.innerHTML = renderMyBookings();
-  else if (view === 'admin')  c.innerHTML = renderAdmin();
+  else if (view === 'admin') c.innerHTML = renderAdmin();
 }
 
-// ────────────────────────────────────────────────
-// HOME VIEW
-// ────────────────────────────────────────────────
+// ── HOME ──
 function renderHome() {
-  const todayStr = todayDate();
-  const todayBookings = bookings.filter(b => b.date === todayStr && b.status !== 'cancelled');
-  const totalToday = todayBookings.length;
-  const totalAll = bookings.filter(b => b.status !== 'cancelled').length;
+  const today = todayDate();
+  const todayB = bookings.filter(b => b.date === today && b.status !== 'cancelled');
+  const freeCount = COURTS.length - new Set(todayB.map(b => b.court)).size;
 
   return `
     <div class="hero">
-      <h2>Welcome to Padel Bay 🎾</h2>
-      <p>Book your court in seconds. 3 courts available.</p>
-      <button class="btn btn-primary" style="background:#94ceae;color:#1a2e2b;max-width:200px" onclick="navigate('book')">Book a Court</button>
+      <div class="hero-bg-circle c1"></div>
+      <div class="hero-bg-circle c2"></div>
+      <div class="hero-badge">🎾 3 Courts Available</div>
+      <h2>Book your court,<br>play your game.</h2>
+      <p>Quick and easy court reservations at Padel Bay.</p>
+      <button class="hero-cta" onclick="navigate('book')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book a Court
+      </button>
     </div>
 
-    <div class="section-title">📊 Today's Overview</div>
     <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-num">${totalToday}</div>
-        <div class="stat-label">Bookings Today</div>
+        <div class="stat-num">${todayB.length}</div>
+        <div class="stat-label">Today</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">${3 - [...new Set(todayBookings.map(b=>b.court))].length}</div>
+        <div class="stat-num">${freeCount < 0 ? 0 : freeCount}</div>
         <div class="stat-label">Courts Free</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">${totalAll}</div>
+        <div class="stat-num">${bookings.filter(b => b.status !== 'cancelled').length}</div>
         <div class="stat-label">All Time</div>
       </div>
     </div>
 
-    <div class="section-title">🏟 Our Courts</div>
-    <div class="courts-grid">
-      ${COURTS.map(court => {
-        const slots = bookedSlotsFor(court.id, todayStr);
-        const free = HOURS.length - slots.length;
-        return `
-          <div class="court-card" onclick="quickBook(${court.id})">
-            <div class="court-info">
-              <div class="court-icon">🎾</div>
-              <div>
-                <div class="court-name">${court.name}</div>
-                <div class="court-sub">${court.type}</div>
-              </div>
-            </div>
+    <div class="section-title">Our Courts</div>
+    ${COURTS.map(court => {
+      const slots = bookedSlotsFor(court.id, today);
+      const free = HOURS.length - slots.length;
+      return `
+        <div class="court-card" onclick="quickBook(${court.id})">
+          <div class="court-left">
+            <div class="court-icon-wrap">🎾</div>
             <div>
-              <div class="availability-pill ${free > 0 ? 'pill-open' : 'pill-busy'}">
-                ${free > 0 ? free + ' slots free' : 'Full today'}
-              </div>
+              <div class="court-name">${court.name}</div>
+              <div class="court-type">${court.type}</div>
             </div>
-          </div>`;
-      }).join('')}
-    </div>
+          </div>
+          <div class="avail-badge ${free > 0 ? 'avail-open' : 'avail-full'}">
+            ${free > 0 ? free + ' free' : 'Full'}
+          </div>
+        </div>`;
+    }).join('')}
 
-    ${todayBookings.length > 0 ? `
-      <div class="section-title mt-20">📅 Today's Bookings</div>
-      ${todayBookings.slice(0,3).map(b => bookingCard(b, false)).join('')}
-      ${todayBookings.length > 3 ? `<p class="text-muted text-center mt-12">+${todayBookings.length - 3} more — check Admin for full list</p>` : ''}
-    ` : ''}
+    ${todayB.length > 0 ? `
+      <div class="section-title mt-20">Today's Bookings</div>
+      ${todayB.slice(0, 3).map(b => bookingCard(b, false)).join('')}
+    ` : `
+      <div class="section-title mt-20">Today's Bookings</div>
+      <div class="today-empty">No bookings yet today</div>
+    `}
   `;
 }
 
 function quickBook(courtId) {
-  bCourt = courtId;
-  bDate = todayDate();
-  bStep = 2;
-  navigate('book');
+  bCourt = courtId; bDate = todayDate(); bStep = 2; navigate('book');
 }
 
-// ────────────────────────────────────────────────
-// BOOK VIEW
-// ────────────────────────────────────────────────
+// ── BOOK ──
 function renderBook() {
-  if (bStep === 1) return renderBookStep1();
-  if (bStep === 2) return renderBookStep2();
-  if (bStep === 3) return renderBookStep3();
-  if (bStep === 4) return renderBookConfirm();
+  if (bStep === 1) return renderStep1();
+  if (bStep === 2) return renderStep2();
+  if (bStep === 3) return renderStep3();
+  if (bStep === 4) return renderConfirm();
 }
 
-function renderBookStep1() {
+function renderStep1() {
   const dates = getDateOptions(14);
   return `
     ${stepsBar(1)}
-
-    <div class="section-title">📅 Select a Date</div>
+    <div class="section-title">Select Date</div>
     <div class="date-strip">
       ${dates.map(d => `
         <div class="date-pill ${bDate === d.value ? 'active' : ''}" onclick="selectDate('${d.value}')">
-          <span class="day-name">${d.dayName}</span>
-          <span class="day-num">${d.dayNum}</span>
-          <span class="month">${d.month}</span>
-        </div>
-      `).join('')}
+          <span class="dn">${d.dayName}</span>
+          <span class="dd">${d.dayNum}</span>
+          <span class="dm">${d.month}</span>
+        </div>`).join('')}
     </div>
-
-    <div class="section-title">🏟 Select a Court</div>
-    <div class="courts-grid">
-      ${COURTS.map(court => {
-        const slots = bDate ? bookedSlotsFor(court.id, bDate) : [];
-        const free = HOURS.length - slots.length;
-        return `
-          <div class="court-card ${bCourt === court.id ? 'selected' : ''}" onclick="selectCourt(${court.id})">
-            <div class="court-info">
-              <div class="court-icon">🎾</div>
-              <div>
-                <div class="court-name">${court.name}</div>
-                <div class="court-sub">${court.type}</div>
-              </div>
+    <div class="section-title">Select Court</div>
+    ${COURTS.map(c => {
+      const slots = bDate ? bookedSlotsFor(c.id, bDate) : [];
+      const free = HOURS.length - slots.length;
+      return `
+        <div class="court-card ${bCourt === c.id ? 'selected' : ''}" onclick="selectCourt(${c.id})">
+          <div class="court-left">
+            <div class="court-icon-wrap">🎾</div>
+            <div>
+              <div class="court-name">${c.name}</div>
+              <div class="court-type">${c.type}</div>
             </div>
-            ${bDate ? `<div class="availability-pill ${free > 0 ? 'pill-open' : 'pill-busy'}">${free > 0 ? free + ' free' : 'Full'}</div>` : ''}
-          </div>`;
-      }).join('')}
-    </div>
-
-    <button class="btn btn-primary mt-16" onclick="goToStep2()" ${!bDate || !bCourt ? 'disabled style="opacity:.4"' : ''}>
-      Continue →
-    </button>
+          </div>
+          ${bDate ? `<div class="avail-badge ${free > 0 ? 'avail-open' : 'avail-full'}">${free > 0 ? free + ' free' : 'Full'}</div>` : ''}
+        </div>`;
+    }).join('')}
+    <button class="btn btn-primary mt-16" onclick="goStep2()" ${!bDate || !bCourt ? 'disabled' : ''}>Continue →</button>
   `;
 }
 
-function renderBookStep2() {
+function renderStep2() {
   const booked = bookedSlotsFor(bCourt, bDate);
-  const courtName = COURTS.find(c => c.id === bCourt).name;
-
+  const court = COURTS.find(c => c.id === bCourt);
   return `
     ${stepsBar(2)}
-    <button class="back-btn" onclick="bStep=1;render()">← Back</button>
-
-    <div class="card card-sm" style="margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="back-btn" onclick="bStep=1;render()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="summary-chip">
+      <div class="summary-chip-left">
+        <div class="summary-chip-icon">🎾</div>
         <div>
-          <div style="font-weight:800;font-size:15px">${courtName}</div>
-          <div class="text-muted">${formatDate(bDate)}</div>
+          <div class="summary-chip-title">${court.name}</div>
+          <div class="summary-chip-sub">${formatDate(bDate)}</div>
         </div>
-        <span style="font-size:22px">🎾</span>
       </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-
-    <div class="section-title">⏰ Pick a Time Slot</div>
+    <div class="section-title">Select Time Slot</div>
     <div class="time-grid">
       ${HOURS.map(h => {
-        const isBooked = booked.includes(h);
-        return `<div class="time-slot ${isBooked ? 'booked' : ''} ${bTime === h && !isBooked ? 'active' : ''}"
-          onclick="${isBooked ? '' : `selectTime('${h}')`}">${h}</div>`;
+        const busy = booked.includes(h);
+        return `<div class="time-slot ${busy ? 'booked' : ''} ${bTime === h && !busy ? 'active' : ''}"
+          onclick="${busy ? '' : `selectTime('${h}')`}">${h}</div>`;
       }).join('')}
     </div>
-
-    <button class="btn btn-primary" onclick="goToStep3()" ${!bTime ? 'disabled style="opacity:.4"' : ''}>
-      Continue →
-    </button>
+    <button class="btn btn-primary" onclick="goStep3()" ${!bTime ? 'disabled' : ''}>Continue →</button>
   `;
 }
 
-function renderBookStep3() {
-  const courtName = COURTS.find(c => c.id === bCourt).name;
+function renderStep3() {
+  const court = COURTS.find(c => c.id === bCourt);
   return `
     ${stepsBar(3)}
-    <button class="back-btn" onclick="bStep=2;render()">← Back</button>
-
-    <div class="card card-sm" style="margin-bottom:20px">
-      <div class="detail-row">
-        <span class="detail-label">Court</span>
-        <span class="detail-val">${courtName}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Date</span>
-        <span class="detail-val">${formatDate(bDate)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Time</span>
-        <span class="detail-val">${bTime}</span>
-      </div>
+    <button class="back-btn" onclick="bStep=2;render()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="form-card" style="margin-bottom:16px">
+      <div class="detail-row"><span class="dl">Court</span><span class="dv">${court.name}</span></div>
+      <div class="detail-row"><span class="dl">Date</span><span class="dv">${formatDate(bDate)}</span></div>
+      <div class="detail-row"><span class="dl">Time</span><span class="dv">${bTime}</span></div>
     </div>
-
-    <div class="section-title">👤 Your Details</div>
-    <div class="card">
+    <div class="section-title">Your Details</div>
+    <div class="form-card">
       <div class="field">
-        <label>Full Name *</label>
+        <label>Full Name</label>
         <input type="text" id="inp-name" placeholder="e.g. Omar Jheir" />
       </div>
       <div class="field">
-        <label>Phone Number *</label>
-        <input type="tel" id="inp-phone" placeholder="e.g. +971 50 123 4567" />
+        <label>Phone Number</label>
+        <input type="tel" id="inp-phone" placeholder="+971 50 123 4567" />
       </div>
       <div class="field">
         <label>Email (optional)</label>
@@ -730,350 +803,209 @@ function renderBookStep3() {
         <input type="text" id="inp-note" placeholder="e.g. 4 players, need balls" />
       </div>
     </div>
-
-    <button class="btn btn-primary" onclick="submitBooking()">Confirm Booking ✓</button>
+    <button class="btn btn-primary" onclick="submitBooking()">Confirm Booking</button>
   `;
 }
 
-function renderBookConfirm() {
+function renderConfirm() {
   const last = bookings[bookings.length - 1];
   if (!last) { navigate('home'); return ''; }
-  const courtName = COURTS.find(c => c.id === last.court).name;
+  const court = COURTS.find(c => c.id === last.court);
   return `
-    <div style="text-align:center;padding:20px 0">
-      <div class="confirm-icon">✅</div>
-      <h2 style="font-size:24px;font-weight:900;margin-bottom:8px">Booking Confirmed!</h2>
-      <p class="text-muted">Your court is all set, ${last.name.split(' ')[0]}!</p>
+    <div style="text-align:center;padding:10px 0 4px">
+      <div class="success-icon">✅</div>
+      <h2 style="font-size:22px;font-weight:900;letter-spacing:-.4px;margin-bottom:6px">You're all set!</h2>
+      <p style="font-size:14px;color:var(--text-3)">See you on the court, ${last.name.split(' ')[0]}.</p>
     </div>
-
-    <div class="card" style="margin-top:16px">
-      <div style="text-align:center;margin-bottom:14px">
-        <span style="font-size:12px;font-weight:700;color:var(--text-muted)">BOOKING ID</span><br>
-        <span style="font-size:22px;font-weight:900;color:var(--dark);letter-spacing:2px">${last.id}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Court</span>
-        <span class="detail-val">${courtName}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Date</span>
-        <span class="detail-val">${formatDate(last.date)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Time</span>
-        <span class="detail-val">${last.time}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Name</span>
-        <span class="detail-val">${last.name}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Phone</span>
-        <span class="detail-val">${last.phone}</span>
-      </div>
+    <div class="booking-id-box mt-20">
+      <div class="booking-id-label">Booking ID</div>
+      <div class="booking-id-val">${last.id}</div>
     </div>
-
-    <button class="btn btn-secondary mt-16" onclick="navigate('home')">Back to Home</button>
-    <button class="btn btn-primary mt-12" onclick="navigate('book')">Book Another Court</button>
+    <div class="form-card">
+      <div class="detail-row"><span class="dl">Court</span><span class="dv">${court.name}</span></div>
+      <div class="detail-row"><span class="dl">Date</span><span class="dv">${formatDate(last.date)}</span></div>
+      <div class="detail-row"><span class="dl">Time</span><span class="dv">${last.time}</span></div>
+      <div class="detail-row"><span class="dl">Name</span><span class="dv">${last.name}</span></div>
+      <div class="detail-row"><span class="dl">Phone</span><span class="dv">${last.phone}</span></div>
+    </div>
+    <button class="btn btn-ghost mt-10" onclick="navigate('home')">Back to Home</button>
+    <button class="btn btn-primary mt-10" onclick="navigate('book')">Book Another Court</button>
   `;
 }
 
 function stepsBar(active) {
-  const labels = ['Date & Court', 'Time', 'Your Info'];
-  return `
-    <div class="steps">
-      ${labels.map((l, i) => {
-        const n = i + 1;
-        const cls = n < active ? 'done' : n === active ? 'active' : '';
-        return `
-          ${i > 0 ? `<div class="step-line ${n <= active ? 'done' : ''}"></div>` : ''}
-          <div class="step ${cls}">
-            <div class="step-num">${n < active ? '✓' : n}</div>
-            <span>${l}</span>
-          </div>`;
-      }).join('')}
-    </div>`;
+  const labels = ['Date & Court', 'Time Slot', 'Your Info'];
+  return `<div class="steps">
+    ${labels.map((l, i) => {
+      const n = i + 1;
+      const cls = n < active ? 'done' : n === active ? 'active' : '';
+      return `${i > 0 ? `<div class="step-line ${n <= active ? 'done' : ''}"></div>` : ''}
+        <div class="step ${cls}"><div class="step-dot">${n < active ? '✓' : n}</div>${n === active ? `<span>${l}</span>` : ''}</div>`;
+    }).join('')}
+  </div>`;
 }
 
-function goToStep2() {
-  if (!bDate || !bCourt) return showToast('Please select a date and court');
-  bStep = 2; render();
-}
-function goToStep3() {
-  if (!bTime) return showToast('Please select a time slot');
-  bStep = 3; render();
-}
-function selectDate(d) { bDate = d; render(); }
-function selectCourt(id) { bCourt = id; render(); }
-function selectTime(t) { bTime = t; render(); }
+function goStep2() { if (!bDate || !bCourt) return toast('Select a date and court'); bStep=2; render(); }
+function goStep3() { if (!bTime) return toast('Select a time slot'); bStep=3; render(); }
+function selectDate(d) { bDate=d; render(); }
+function selectCourt(id) { bCourt=id; render(); }
+function selectTime(t) { bTime=t; render(); }
 
 function submitBooking() {
   const name  = document.getElementById('inp-name')?.value.trim();
   const phone = document.getElementById('inp-phone')?.value.trim();
   const email = document.getElementById('inp-email')?.value.trim();
   const note  = document.getElementById('inp-note')?.value.trim();
-
-  if (!name)  return showToast('Please enter your name');
-  if (!phone) return showToast('Please enter your phone number');
-
-  // Double-check slot is still free
-  const taken = bookedSlotsFor(bCourt, bDate);
-  if (taken.includes(bTime)) return showToast('Sorry, this slot was just booked. Please pick another.');
-
-  const booking = {
-    id: genId(),
-    court: bCourt,
-    date: bDate,
-    time: bTime,
-    name, phone, email, note,
-    status: 'confirmed',
-    createdAt: new Date().toISOString(),
-  };
-  bookings.push(booking);
-  saveBookings();
-  bStep = 4;
-  render();
+  if (!name)  return toast('Please enter your name');
+  if (!phone) return toast('Please enter your phone number');
+  if (bookedSlotsFor(bCourt, bDate).includes(bTime)) return toast('Slot just got booked — pick another');
+  bookings.push({ id: genId(), court: bCourt, date: bDate, time: bTime, name, phone, email, note, status: 'confirmed', createdAt: new Date().toISOString() });
+  save(); bStep = 4; render();
 }
 
-// ────────────────────────────────────────────────
-// MY BOOKINGS VIEW
-// ────────────────────────────────────────────────
+// ── MY BOOKINGS ──
 function renderMyBookings() {
-  let filtered = mbPhone
+  const filtered = mbPhone
     ? bookings.filter(b => b.phone.replace(/\s/g,'').includes(mbPhone.replace(/\s/g,'')))
     : [];
-
   return `
-    <div class="section-title">📋 My Bookings</div>
-    <p class="text-muted" style="margin-bottom:16px">Enter your phone number to find your bookings.</p>
-
-    <div class="search-box">
-      <input type="tel" id="mb-phone" placeholder="Your phone number" value="${mbPhone}"
-        onkeydown="if(event.key==='Enter')searchMyBookings()" />
-      <button onclick="searchMyBookings()">Search</button>
+    <div class="section-title">Find Your Booking</div>
+    <div class="search-wrap">
+      <input type="tel" id="mb-inp" placeholder="Enter your phone number" value="${mbPhone}"
+        onkeydown="if(event.key==='Enter')searchMB()" />
+      <button onclick="searchMB()">Search</button>
     </div>
-
-    ${mbPhone && filtered.length === 0 ? `
+    ${mbPhone && !filtered.length ? `
       <div class="empty-state">
         <div class="empty-icon">🔍</div>
         <h3>No bookings found</h3>
-        <p>No bookings found for this phone number.</p>
-      </div>
-    ` : ''}
-
-    ${filtered.map(b => bookingCard(b, true)).join('')}
+        <p>No bookings match this phone number.<br>Try a different number.</p>
+      </div>` : ''}
+    ${filtered.slice().reverse().map(b => bookingCard(b, true)).join('')}
   `;
 }
+function searchMB() { mbPhone = document.getElementById('mb-inp')?.value.trim(); render(); }
 
-function searchMyBookings() {
-  mbPhone = document.getElementById('mb-phone')?.value.trim();
-  render();
-}
-
-// ────────────────────────────────────────────────
-// ADMIN VIEW
-// ────────────────────────────────────────────────
+// ── ADMIN ──
 function renderAdmin() {
   const today = todayDate();
-  let filtered = bookings;
-  if (adminTab === 'today') filtered = bookings.filter(b => b.date === today);
-  if (adminTab === 'upcoming') filtered = bookings.filter(b => b.date >= today && b.status !== 'cancelled');
-  if (adminTab === 'cancelled') filtered = bookings.filter(b => b.status === 'cancelled');
-
+  let list = bookings;
+  if (adminTab === 'today')     list = bookings.filter(b => b.date === today);
+  if (adminTab === 'upcoming')  list = bookings.filter(b => b.date >= today && b.status !== 'cancelled');
+  if (adminTab === 'cancelled') list = bookings.filter(b => b.status === 'cancelled');
   const confirmed = bookings.filter(b => b.status !== 'cancelled').length;
   const todayCount = bookings.filter(b => b.date === today && b.status !== 'cancelled').length;
-  const cancelled = bookings.filter(b => b.status === 'cancelled').length;
-
+  const cancelledCount = bookings.filter(b => b.status === 'cancelled').length;
   return `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="section-title" style="margin:0">⚙ Admin Panel</div>
-      <button class="btn btn-primary btn-sm" onclick="navigate('book')">+ New Booking</button>
+      <div class="section-title" style="margin:0">Admin Panel</div>
+      <button class="btn btn-primary btn-sm" onclick="navigate('book')">+ New</button>
     </div>
-
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num">${todayCount}</div>
-        <div class="stat-label">Today</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">${confirmed}</div>
-        <div class="stat-label">Confirmed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">${cancelled}</div>
-        <div class="stat-label">Cancelled</div>
-      </div>
+      <div class="stat-card"><div class="stat-num">${todayCount}</div><div class="stat-label">Today</div></div>
+      <div class="stat-card"><div class="stat-num">${confirmed}</div><div class="stat-label">Confirmed</div></div>
+      <div class="stat-card"><div class="stat-num">${cancelledCount}</div><div class="stat-label">Cancelled</div></div>
     </div>
-
     <div class="tab-bar">
       <button class="tab ${adminTab==='all'?'active':''}" onclick="setAdminTab('all')">All</button>
       <button class="tab ${adminTab==='today'?'active':''}" onclick="setAdminTab('today')">Today</button>
       <button class="tab ${adminTab==='upcoming'?'active':''}" onclick="setAdminTab('upcoming')">Upcoming</button>
       <button class="tab ${adminTab==='cancelled'?'active':''}" onclick="setAdminTab('cancelled')">Cancelled</button>
     </div>
-
-    ${filtered.length === 0 ? `
-      <div class="empty-state">
-        <div class="empty-icon">📋</div>
-        <h3>No bookings here</h3>
-        <p>Bookings will appear here once they're made.</p>
-      </div>
-    ` : filtered.slice().reverse().map(b => bookingCard(b, true)).join('')}
+    ${!list.length ? `<div class="empty-state"><div class="empty-icon">📋</div><h3>Nothing here</h3><p>Bookings will appear once they're made.</p></div>` : list.slice().reverse().map(b => bookingCard(b, true)).join('')}
   `;
 }
+function setAdminTab(t) { adminTab=t; render(); }
 
-function setAdminTab(t) { adminTab = t; render(); }
-
-// ────────────────────────────────────────────────
-// SHARED BOOKING CARD
-// ────────────────────────────────────────────────
+// ── BOOKING CARD ──
 function bookingCard(b, showCancel) {
-  const courtName = COURTS.find(c => c.id === b.court)?.name || 'Court';
+  const court = COURTS.find(c => c.id === b.court)?.name || 'Court';
   const isPast = b.date < todayDate();
+  const statusClass = b.status === 'cancelled' ? 'status-cancelled' : isPast ? 'status-completed' : 'status-confirmed';
+  const statusLabel = b.status === 'cancelled' ? 'Cancelled' : isPast ? 'Completed' : 'Confirmed';
   return `
-    <div class="booking-item ${b.status === 'cancelled' ? 'cancelled' : ''}">
-      <div class="booking-header">
+    <div class="booking-card ${b.status==='cancelled'?'cancelled':''}">
+      <div class="bc-top">
         <div>
-          <div class="booking-name">${b.name}</div>
-          <div class="booking-court">${courtName}</div>
+          <div class="bc-name">${b.name}</div>
+          <div class="bc-court">${court}</div>
         </div>
-        <div class="status-pill ${b.status === 'cancelled' ? 'status-cancelled' : 'status-confirmed'}">
-          ${b.status === 'cancelled' ? 'Cancelled' : isPast ? 'Completed' : 'Confirmed'}
-        </div>
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
       </div>
-      <div class="booking-meta">
-        <div class="booking-meta-item">📅 ${formatDate(b.date)}</div>
-        <div class="booking-meta-item">⏰ ${b.time}</div>
-        <div class="booking-meta-item">📞 ${b.phone}</div>
-        ${b.id ? `<div class="booking-meta-item">🆔 ${b.id}</div>` : ''}
+      <div class="bc-meta">
+        <div class="bc-meta-item">📅 ${formatDate(b.date)}</div>
+        <div class="bc-meta-item">⏰ ${b.time}</div>
+        <div class="bc-meta-item">📞 ${b.phone}</div>
+        ${b.id ? `<div class="bc-meta-item">🆔 ${b.id}</div>` : ''}
       </div>
-      ${b.note ? `<div class="text-muted" style="font-size:12px;margin-top:8px">📝 ${b.note}</div>` : ''}
+      ${b.note ? `<div style="font-size:12px;color:var(--text-3);margin-top:8px;padding:6px 10px;background:var(--bg);border-radius:8px">📝 ${b.note}</div>` : ''}
       ${showCancel && b.status !== 'cancelled' && !isPast ? `
         <div style="margin-top:12px">
           <button class="btn btn-danger btn-sm" onclick="requestCancel('${b.id}')">Cancel Booking</button>
-        </div>
-      ` : ''}
-    </div>
-  `;
+        </div>` : ''}
+    </div>`;
 }
 
-// ────────────────────────────────────────────────
-// CANCEL LOGIC
-// ────────────────────────────────────────────────
-function requestCancel(id) {
-  cancelId = id;
-  openModal('cancelModal');
-}
+// ── CANCEL ──
+function requestCancel(id) { cancelId=id; openModal('cancelModal'); }
 function confirmCancel() {
   const idx = bookings.findIndex(b => b.id === cancelId);
-  if (idx !== -1) {
-    bookings[idx].status = 'cancelled';
-    saveBookings();
-    showToast('Booking cancelled');
-  }
-  closeModal('cancelModal');
-  render();
+  if (idx !== -1) { bookings[idx].status = 'cancelled'; save(); toast('Booking cancelled'); }
+  closeModal('cancelModal'); render();
 }
 
-// ────────────────────────────────────────────────
-// ADMIN MODAL
-// ────────────────────────────────────────────────
+// ── ADMIN MODAL ──
 function showAdminModal() {
-  if (adminLoggedIn) {
-    document.getElementById('adminModalContent').innerHTML = `
-      <p class="text-muted text-center" style="margin-bottom:16px">You are logged in as Admin.</p>
-      <button class="btn btn-primary" onclick="closeModal('adminModal');view='admin';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));render()">Go to Admin Panel</button>
-      <button class="btn btn-secondary mt-12" onclick="adminLoggedIn=false;showToast('Logged out');closeModal('adminModal')">Log out</button>
-    `;
-  } else {
-    document.getElementById('adminModalContent').innerHTML = `
-      <div class="field">
-        <label>Admin Password</label>
-        <input type="password" id="admin-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')tryAdminLogin()" />
-      </div>
-      <button class="btn btn-primary" onclick="tryAdminLogin()">Login</button>
-      <button class="btn btn-secondary mt-12" onclick="closeModal('adminModal')">Cancel</button>
-    `;
-  }
+  document.getElementById('adminModalTitle').textContent = adminLoggedIn ? '⚙ Admin Panel' : '🔐 Admin Access';
+  document.getElementById('adminModalContent').innerHTML = adminLoggedIn ? `
+    <p style="text-align:center;color:var(--text-3);font-size:13px;margin-bottom:20px">Logged in as Administrator</p>
+    <button class="btn btn-primary" onclick="closeModal('adminModal');view='admin';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));render()">Open Admin Panel</button>
+    <button class="btn btn-ghost mt-10" onclick="adminLoggedIn=false;toast('Logged out');closeModal('adminModal')">Log out</button>
+  ` : `
+    <div class="field"><label>Password</label><input type="password" id="admin-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')tryLogin()" /></div>
+    <button class="btn btn-primary" onclick="tryLogin()">Login</button>
+    <button class="btn btn-ghost mt-10" onclick="closeModal('adminModal')">Cancel</button>
+  `;
   openModal('adminModal');
+  setTimeout(() => document.getElementById('admin-pass')?.focus(), 350);
+}
+function tryLogin() {
+  const p = document.getElementById('admin-pass')?.value;
+  if (p === ADMIN_PASS) {
+    adminLoggedIn = true; closeModal('adminModal');
+    view='admin'; document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    render(); toast('Welcome, Admin 👋');
+  } else { toast('Wrong password'); }
 }
 
-function tryAdminLogin() {
-  const pass = document.getElementById('admin-pass')?.value;
-  if (pass === ADMIN_PASS) {
-    adminLoggedIn = true;
-    closeModal('adminModal');
-    view = 'admin';
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    render();
-    showToast('Welcome, Admin!');
-  } else {
-    showToast('Incorrect password');
-  }
-}
+// ── MODALS ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id==='adminModal') closeModal('adminModal'); });
+document.getElementById('cancelModal').addEventListener('click', e => { if (e.target.id==='cancelModal') closeModal('cancelModal'); });
 
-// ────────────────────────────────────────────────
-// MODALS
-// ────────────────────────────────────────────────
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
+// ── HELPERS ──
+function bookedSlotsFor(cId, date) {
+  return bookings.filter(b => b.court===cId && b.date===date && b.status!=='cancelled').map(b => b.time);
 }
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+function todayDate() { return new Date().toISOString().split('T')[0]; }
+function formatDate(s) {
+  if (!s) return '';
+  const d = new Date(s + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
 }
-document.getElementById('adminModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal('adminModal');
-});
-document.getElementById('cancelModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal('cancelModal');
-});
-
-// ────────────────────────────────────────────────
-// HELPERS
-// ────────────────────────────────────────────────
-function bookedSlotsFor(courtId, date) {
-  return bookings
-    .filter(b => b.court === courtId && b.date === date && b.status !== 'cancelled')
-    .map(b => b.time);
+function getDateOptions(n) {
+  return Array.from({length:n}, (_,i) => {
+    const d = new Date(); d.setDate(d.getDate()+i);
+    return { value: d.toISOString().split('T')[0], dayName: d.toLocaleDateString('en-GB',{weekday:'short'}), dayNum: d.getDate(), month: d.toLocaleDateString('en-GB',{month:'short'}) };
+  });
 }
-
-function todayDate() {
-  const d = new Date();
-  return d.toISOString().split('T')[0];
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function getDateOptions(days) {
-  const opts = [];
-  for (let i = 0; i < days; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    const value = d.toISOString().split('T')[0];
-    opts.push({
-      value,
-      dayName: d.toLocaleDateString('en-GB', { weekday: 'short' }),
-      dayNum:  d.getDate(),
-      month:   d.toLocaleDateString('en-GB', { month: 'short' }),
-    });
-  }
-  return opts;
-}
-
-function showToast(msg) {
+function toast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-// ────────────────────────────────────────────────
-// INIT
-// ────────────────────────────────────────────────
 render();
 </script>
 </body>
